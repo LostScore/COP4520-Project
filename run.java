@@ -8,6 +8,7 @@ public class run {
         adjacencyList = new LinkedList[101];
         int count = 0;
         int j;
+        // Create the graph depicted in the image
         for (int i = 0; i < 101; i++)
             adjacencyList[i] = new LinkedList<Integer>();
 
@@ -37,6 +38,7 @@ public class run {
         addEdge(98, 99);
         addEdge(99, 100);
 
+        // Get the time in the bfs algorithmn
         long startTime = System.nanoTime();
         bfs sequential = new bfs(adjacencyList);
         sequential.GraphBFS(0);
@@ -44,6 +46,7 @@ public class run {
         long executionTime = (endTime - startTime) / 1000000;
         System.out.println(executionTime + " ms");
         startTime = System.nanoTime();
+        // Get the time in the parralel bfs algorithmn
         parralelbfs parralel = new parralelbfs(adjacencyList);
         parralel.GraphBFS(0);
         endTime = System.nanoTime();
