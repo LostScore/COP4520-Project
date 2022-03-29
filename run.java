@@ -1,4 +1,3 @@
-package BFS_Project;
 import java.util.LinkedList;
 import bfs.*;
 
