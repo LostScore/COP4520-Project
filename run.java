@@ -15,7 +15,7 @@ public class run {
         {
             numThread = Integer.parseInt(args[0]);
         }
-        System.out.println("Testing with "+numThread+" threads");
+        System.out.println("Testing with "+numThread+" threads starting at index "+testNum);
         adjacencyList =  new LinkedList<>();
         worstList = new LinkedList<>();
         int count = 0;
