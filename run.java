@@ -6,8 +6,15 @@ public class run {
     public static LinkedList<LinkedList<Integer>> worstList;
     public static void main(String[] args) {
         int numThread = 20;
-        if (args.length == 1)
+        int testNum = 0;
+        if (args.length == 2){
             numThread = Integer.parseInt(args[0]);
+            testNum = Integer.parseInt(args[1]);
+        }
+        else if(args.length == 1)
+        {
+            numThread = Integer.parseInt(args[0]);
+        }
         System.out.println("Testing with "+numThread+" threads");
         adjacencyList =  new LinkedList<>();
         worstList = new LinkedList<>();
