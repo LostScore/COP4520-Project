@@ -15,15 +15,17 @@ public class parralelbfs {
     private CyclicBarrier barrier;
     private AtomicBoolean visited[];
     private CountDownLatch latch;
+    private int numThread;
 
     public parralelbfs(LinkedList<Integer> graph[]) {
         adjacencyList = graph;
+        numThread = 8;
     }
 
     public void GraphBFS(int i) {
-        ExecutorService threadPool = Executors.newFixedThreadPool(20);
-        latch = new CountDownLatch(21);
-        barrier = new CyclicBarrier(20);
+        ExecutorService threadPool = Executors.newFixedThreadPool(numThread);
+        latch = new CountDownLatch(numThread+1);
+        barrier = new CyclicBarrier(numThread);
         visited = new AtomicBoolean[adjacencyList.length];
         for (int x = 0; x < adjacencyList.length; x++) {
             // System.out.println(visited[x]);
@@ -41,7 +43,7 @@ public class parralelbfs {
             // Set it to being visited
             visited[i].set(true);
             // Spin up the treadpool
-            for (int j = 0; j < 20; j++)
+            for (int j = 0; j < numThread; j++)
                 threadPool.execute(new HelperBFS(i));
             // Latch on the threadPool to main thread
             latch.countDown();
@@ -87,7 +89,7 @@ public class parralelbfs {
                         // get the waiting number for thread
                         int num = barrier.getNumberWaiting();
                         // if this thread is the last thread i.e all 20 are waiting here
-                        if (num == 19) {
+                        if (num == numThread-1) {
                             // This thread makes the queue the next queue and makes a brand new one
                             queue = nextQueue;
                             nextQueue = new LinkedBlockingQueue<Integer>();
@@ -99,7 +101,7 @@ public class parralelbfs {
                             // Thread 0-18 wait here
                             barrier.await();
 
-                        // If the queue is empty and nextQueue is empty that means we tranverse every vertext applicable
+                        // If the queue is empty and nextQueue is empty that means we tranverse every vertex applicable
                         if (queue.isEmpty() && nextQueue.isEmpty())
                             break;
                     }
