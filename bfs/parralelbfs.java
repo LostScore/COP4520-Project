@@ -9,25 +9,25 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class parralelbfs {
-    private LinkedList<Integer> adjacencyList[];
+    private LinkedList<LinkedList<Integer>> adjacencyList;
     private LinkedBlockingQueue<Integer> queue;
     private LinkedBlockingQueue<Integer> nextQueue;
     private CyclicBarrier barrier;
     private AtomicBoolean visited[];
     private CountDownLatch latch;
-    private int numThread;
+    private int numThread = 20;
 
-    public parralelbfs(LinkedList<Integer> graph[]) {
+    public parralelbfs(LinkedList<LinkedList<Integer>> graph, int x) {
         adjacencyList = graph;
-        numThread = 8;
+        numThread = x;
     }
 
     public void GraphBFS(int i) {
         ExecutorService threadPool = Executors.newFixedThreadPool(numThread);
         latch = new CountDownLatch(numThread+1);
         barrier = new CyclicBarrier(numThread);
-        visited = new AtomicBoolean[adjacencyList.length];
-        for (int x = 0; x < adjacencyList.length; x++) {
+        visited = new AtomicBoolean[adjacencyList.size()];
+        for (int x = 0; x < adjacencyList.size(); x++) {
             // System.out.println(visited[x]);
             visited[x] = new AtomicBoolean(false);
             // System.out.println(visited[x]);
@@ -71,10 +71,10 @@ public class parralelbfs {
                 while (true) {
                     // If the queue isn't empty it means that there are values still
                     // still in the queue
-                    if (!queue.isEmpty()) {
-                        // Retrieve the value
-                        int index = queue.poll();
-                        for (int idx : adjacencyList[index]) {
+                    // Retrieve the value, two thread could check simultaneously which could throw an error.
+                    Integer index = queue.poll();
+                    if (index != null) {
+                        for (int idx : adjacencyList.get(index)) {
                             // Check if it's visited
                             if (!visited[index].get()) {
                                 // add it to the nextQueue

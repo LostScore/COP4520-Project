@@ -4,14 +4,14 @@ import java.util.ArrayDeque;
 import java.util.LinkedList;
 
 public class bfs {
-    private LinkedList<Integer> adjacencyList[];
+    private LinkedList<LinkedList<Integer>> adjacencyList;
 
-    public bfs(LinkedList<Integer> graph[]) {
+    public bfs(LinkedList<LinkedList<Integer>> graph) {
         adjacencyList = graph;
     }
 
     public void GraphBFS(int i) {
-        boolean visited[] = new boolean[adjacencyList.length];
+        boolean visited[] = new boolean[adjacencyList.size()];
 
         ArrayDeque<Integer> queue = new ArrayDeque<Integer>();
 
@@ -21,7 +21,7 @@ public class bfs {
             int index = queue.poll();
             // System.out.print(index + " ");
 
-            for (Integer idx : adjacencyList[index]) {
+            for (Integer idx : adjacencyList.get(index)) {
                 if (!visited[idx]) {
                     visited[idx] = true;
                     queue.add(idx);
@@ -30,6 +30,6 @@ public class bfs {
             }
 
         }
-        System.out.println();
+        //System.out.println();
     }
 }

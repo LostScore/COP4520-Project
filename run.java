@@ -2,16 +2,20 @@ import java.util.LinkedList;
 import bfs.*;
 
 public class run {
-    public static LinkedList<Integer> adjacencyList[];
-    public static LinkedList<Integer> worstList[];
+    public static LinkedList<LinkedList<Integer>> adjacencyList;
+    public static LinkedList<LinkedList<Integer>> worstList;
     public static void main(String[] args) {
-        adjacencyList = new LinkedList[101];
-        worstList = new LinkedList[100];
+        int numThread = 20;
+        if (args.length == 1)
+            numThread = Integer.parseInt(args[0]);
+        System.out.println("Testing with "+numThread+" threads");
+        adjacencyList =  new LinkedList<>();
+        worstList = new LinkedList<>();
         int count = 0;
         int j;
         // Create the graph depicted in the image
         for (int i = 0; i < 101; i++)
-            adjacencyList[i] = new LinkedList<Integer>();
+            adjacencyList.add(new LinkedList<Integer>()); 
 
         for (j = count + 1; j < count + 1 + 6; j++) {
             addEdge(count, j);
@@ -40,28 +44,28 @@ public class run {
         addEdge(99, 100);
 
         for (int i = 0; i < 100; i++)
-            worstList[i] = new LinkedList<>();
+            worstList.add(new LinkedList<Integer>());
 
         for (int i = 1; i < 100; i++)
             addEdge(i, i-1);
             
 
 
-        System.out.println("Best Case");
+        System.out.println("Test Case");
         // Get the time in the bfs algorithmn
         long startTime = System.nanoTime();
         bfs sequential = new bfs(adjacencyList);
         sequential.GraphBFS(0);
         long endTime = System.nanoTime();
         long executionTime = (endTime - startTime) / 1000;
-        System.out.println(executionTime + " microseconds");
+        System.out.println("Sequential Time:  "+executionTime + " microseconds");
         startTime = System.nanoTime();
         // Get the time in the parralel bfs algorithmn
-        parralelbfs parralel = new parralelbfs(adjacencyList);
+        parralelbfs parralel = new parralelbfs(adjacencyList,numThread);
         parralel.GraphBFS(0);
         endTime = System.nanoTime();
         executionTime = (endTime - startTime) / 1000;
-        System.out.println(executionTime + " microseconds");
+        System.out.println("Parralel Time:    "+executionTime + " microseconds");
 
         System.out.println("Worst Case");
         startTime = System.nanoTime();
@@ -69,20 +73,20 @@ public class run {
         sequential.GraphBFS(0);
         endTime = System.nanoTime();
         executionTime = (endTime - startTime) / 1000;
-        System.out.println(executionTime + " microseconds");
+        System.out.println("Sequential Time:  "+executionTime + " microseconds");
 
         startTime = System.nanoTime();
-        parralel = new parralelbfs(worstList);
+        parralel = new parralelbfs(worstList, numThread);
         parralel.GraphBFS(0);
         endTime = System.nanoTime();
         executionTime = (endTime - startTime) / 1000;
-        System.out.println(executionTime + " microseconds");
+        System.out.println("Parralel Time:    "+executionTime + " microseconds");
 
     }
 
     static void addEdge(int x, int y) {
-        adjacencyList[x].add(y);
-        adjacencyList[y].add(x);
+        adjacencyList.get(x).add(y);
+        adjacencyList.get(y).add(x);
     }
 
 }
